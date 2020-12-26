@@ -1,37 +1,34 @@
-ui <- fluidPage(
+source("config.R")
+
+ui <- dashboardPage(
   
-  titlePanel("Argos: Metadata Inspection "),
+  dashboardHeader(title = "Argos"),
   
-  hr(),
-  
-  DT::dataTableOutput("contents"),
-  hr(),
-  
-  
-  fluidRow(
-    column(3,
-           fileInput("file1", "Choose TSV File",
-                     multiple = FALSE,
-                     accept = c("text/tsv",
-                                "text/tab-separated-values,text/plain",
-                                ".tsv",
-                                ".xls"))
-    ),
+  dashboardSidebar(
+    fileInput("file1", label = h3("Choose TSV File"),
+              multiple = FALSE,
+              accept = ACCEPT_FILE_TYPES),
     
-    column(4,
-           radioButtons("select1", label = h3("Select Group"), 
-                        choices = list("Experiment Info" = 1, "STAR" = 2, "VERSE" = 3,
-                                       "BLAST" = 4, "Trim" = 5, "Experiment Metadata" = 6),
-                        selected = 1)
-    ), 
-    
-    column(4,
-           checkboxGroupInput("select2", label = h3("Select Sub-group"), 
-                              choices = list("Experiment Info" = 1, "STAR" = 2, "VERSE" = 3,
-                                             "BLAST" = 4, "Trim" = 5, "Experiment Metadata" = 6),
-                              selected = 1)
+    radioButtons("select1", label = h3("Select Analysis"), 
+                 choices = L1_SELECT_LIST,
+                 selected = 1),
+    radioButtons("select2", label = h3("Select Information"),
+                 choices = list(),
+                 selected = 1),
+    checkboxGroupInput("select3", label = h3("Mulit-Select Columns"),
+                 choices = list(),
+                 selected = 1)
+  ),
+  
+  dashboardBody(
+    fluidRow(
+      box(
+        width = 12,
+        height = 800,
+        DT::dataTableOutput("contents"),
+        style = "overflow-y: scroll; overflow-x: scroll;"
+      )
     )
-    
   )
   
 )
